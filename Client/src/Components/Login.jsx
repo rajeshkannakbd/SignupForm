@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const Signup = () => {
-  
+import { nameContext } from "../App";
+const Login = () => {
+  const { setHname, setIsAuthenticated } = useContext(nameContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -13,8 +14,11 @@ const Signup = () => {
       .post("http://localhost:3001/login", { email, password })
       .then((result) => {
         console.log("Registration successful:", result);
-        if(result.data ==="sucess"){
-        navigate("/home");}
+        if (result.data.status === "success") {
+          setHname(result.data.user.name);
+          setIsAuthenticated(true);
+          navigate("/home");
+        }
       })
       .catch((err) => {
         console.error("Registration error:", err);
@@ -63,5 +67,4 @@ const Signup = () => {
     </div>
   );
 };
-
-export default Signup;
+export default Login;
